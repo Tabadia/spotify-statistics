@@ -1,0 +1,129 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: sans-serif;
+    color: #1DCB5D;
+    background-color: #000000;
+    text-align: center;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+    font-size: 20px;
+}
+
+* {
+    box-sizing: border-box;
+  }
+  
+h1 {
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+a {
+    text-decoration: underline;
+    font-size: 25px;
+    color: #1DCB5D;
+}
+
+a:visited {
+    color: #1DCB5D;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
+@keyframes quiet {
+    25%{
+      transform: scaleY(.6);
+    }
+    50%{
+      transform: scaleY(.4);
+    }
+    75%{
+      transform: scaleY(.8);
+    }
+  }
+  
+  @keyframes normal {
+    25%{
+      transform: scaleY(1);
+    }
+    50%{
+      transform: scaleY(.4);
+    }
+    75%{
+      transform: scaleY(.6);
+    }
+  }
+  @keyframes loud {
+    25%{
+      transform: scaleY(1);
+    }
+    50%{
+      transform: scaleY(.4);
+    }
+    75%{
+      transform: scaleY(1.2);
+    }
+  }
+  
+  .waveDiv{
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    height: 64px;
+    --boxSize: 8px;
+    --gutter: 4px;
+    width: calc((var(--boxSize) + var(--gutter)) * 5);
+  }
+  
+  .box{
+    transform: scaleY(.4);
+    height: 100%;
+    width: var(--boxSize);
+    background: #1DCB5D;
+    animation-duration: 1.2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    border-radius: 8px;
+  }
+  
+  .box1{
+    animation-name: quiet;
+  }
+  
+  .box2{
+    animation-name: normal;
+  }
+  
+  .box3{
+    animation-name: quiet;
+  }
+  
+  .box4{
+    animation-name: loud;
+  }
+  
+  .box5{
+    animation-name: quiet;
+  }

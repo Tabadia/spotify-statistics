@@ -1,0 +1,120 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: sans-serif;
+    color: #1DCB5D;
+    background-color: #000000;
+    text-align: center;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    padding-top: 50px;
+    font-size: 10px;
+}
+
+* {
+    box-sizing: border-box;
+  }
+  
+h1 {
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+a {
+    text-decoration: underline;
+    font-size: 25px;
+    color: #1DCB5D;
+}
+
+a:visited {
+    color: #1DCB5D;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#trackLists {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+}
+
+#artistLists {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+}
+@media (min-width: 900px) {
+    .olContainer {
+        width: 30%;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: center;
+        align-content: center;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+}
+@media (max-width: 899px){
+    .olContainer {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+}
+ol {
+    flex-basis: auto;
+    align-self: auto;
+    order: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin:auto;
+    padding: 0;
+}
+
+
+li {
+    width: 64px;
+    white-space:nowrap;
+    overflow: hidden;
+    flex-basis: auto;
+    align-self: auto;
+    order: 0;
+    padding: 5px;
+}
+
+img {
+    max-width: 64px;
+    max-height: 64px;
+}
