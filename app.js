@@ -207,6 +207,3 @@ const tracks2medium = await axios.get(
       "</main>"
     );  
 });
-
-// Client ID: 5993ee842578446b8a04289c6f6676b9
-// Client Secret: cd647456b8f24150bbf6d048f2f4bcd0
