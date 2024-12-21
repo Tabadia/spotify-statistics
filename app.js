@@ -31,16 +31,20 @@ app.get("/", (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
+    const clientId = process.env.CLIENT_ID.trim();
+    const clientSecret = process.env.CLIENT_SECRET.trim();
+    const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
     const spotifyResponse = await axios.post(
         "https://accounts.spotify.com/api/token",
         queryString.stringify({
           grant_type: "authorization_code",
           code: req.query.code,
-          redirect_uri: process.env.REDIRECT_URI_DECODED,
+          redirect_uri: process.env.REDIRECT_URI_DECODED.trim(),
         }),
         {
           headers: {
-            Authorization: "Basic " + process.env.CLIENT_SECRET,
+            Authorization: `Basic ${authHeader}`,
             "Content-Type": "application/x-www-form-urlencoded",
           },
         }
