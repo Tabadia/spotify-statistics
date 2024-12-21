@@ -127,3 +127,17 @@ footer {
   .box5{
     animation-name: quiet;
   }
+
+  /* @media (max-width: 600px) {
+    h1 {
+        font-size: 70px;
+    }
+
+    a {
+        font-size: 35px;
+    }
+
+    main {
+        font-size: 30px;
+    }
+} */

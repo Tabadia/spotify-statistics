@@ -23,8 +23,8 @@ main {
 
 * {
     box-sizing: border-box;
-  }
-  
+}
+
 h1 {
     font-size: 50px;
     font-weight: bolder;
@@ -46,75 +46,76 @@ footer {
     width: 100%;
 }
 
-#trackLists {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    align-content: center;
+.tabButton {
+    background-color: #1DCB5D;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#artistLists {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    align-content: center;
+.tabButton:hover {
+    background-color: #00A63F;
+    color: #FFFFFF;
 }
-@media (min-width: 900px) {
-    .olContainer {
-        width: 30%;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        align-items: center;
-        align-content: center;
-        padding-left: 2px;
-        padding-right: 2px;
-    }
+
+.tabButton.active {
+    background-color: #00A63F;
+    color: #FFFFFF;
 }
-@media (max-width: 899px){
-    .olContainer {
-        width: 100%;
-        justify-content: center;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        align-content: center;
-        padding-left: 2px;
-        padding-right: 2px;
-    }
+
+.hidden { 
+    display: none; 
 }
+
+.tabContent { 
+    margin-top: 20px; 
+}
+
+.subTabs { 
+    margin-top: 10px; 
+}
+
 ol {
-    flex-basis: auto;
-    align-self: auto;
-    order: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     align-content: center;
-    margin:auto;
+    margin: auto;
     padding: 0;
+    width: 50%;
 }
 
-
 li {
-    width: 64px;
-    white-space:nowrap;
+    width: 128px;
+    white-space: nowrap;
     overflow: hidden;
-    flex-basis: auto;
-    align-self: auto;
-    order: 0;
     padding: 5px;
 }
 
 img {
-    max-width: 64px;
-    max-height: 64px;
+    width: 128px;
+    height: 128px;
+}
+
+@media (max-width: 768px) {
+    ol {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    /* li {
+        width: 100%;
+    } */
+
+    img {
+        width: 128px;
+        height: 128px;
+    }
 }

@@ -5,13 +5,14 @@ const queryString = require("node:querystring");
 const axios = require("axios");
 
 app.listen(8080, () => {
-  console.log("App is listening on port 8080!\n");
+  console.log("App is listening on port 8080!");
 });
 
 app.use(express.static(__dirname + '/'));
 
 app.get("/", (req, res) => {
     res.send(
+        '<meta name="viewport" content="width=device-width, initial-scale=1">' +
         '<link rel="stylesheet" type="text/css" href="css/login.css" />' +
         "<main>" +
         "<h1>Spotify Statistics</h1>" + 
@@ -49,165 +50,122 @@ app.get("/home", async (req, res) => {
           },
         }
     );
-    const tracks1short = await axios.get(
-        "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=49&offset=0",
+
+    const accessToken = spotifyResponse.data.access_token;
+
+    const fetchTopItems = async (type, timeRange, limit, offset) => {
+      return axios.get(
+        `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}&offset=${offset}`,
         {
           headers: {
-            Authorization: "Bearer " + spotifyResponse.data.access_token,
+            Authorization: "Bearer " + accessToken,
           },
         }
-    );
-    const tracks2short = await axios.get(
-        "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=49",
-        {
-          headers: {
-            Authorization: "Bearer " + spotifyResponse.data.access_token,
-          },
-        }
-  );
-  const tracks1medium = await axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=49&offset=0",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-);
-const tracks2medium = await axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=50&offset=49",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const tracks1long = await axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=49&offset=0",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const tracks2long = await axios.get(
-    "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50&offset=49",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists1short = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=49&offset=0",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists2short = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=49",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists1medium = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=49&offset=0",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists2medium = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=50&offset=49",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists1long = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=49&offset=0",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
-  const artists2long = await axios.get(
-    "https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=49",
-    {
-      headers: {
-        Authorization: "Bearer " + spotifyResponse.data.access_token,
-      },
-    }
-  );
+      );
+    };
     
-    //console.log(spotifyResponse.data);
-    console.log(artists1short.data);
-    //console.log(data2.data);
+    const [tracks1short, tracks2short, tracks1medium, tracks2medium, tracks1long, tracks2long, 
+           artists1short, artists2short, artists1medium, artists2medium, artists1long, artists2long] = await Promise.all([
+      fetchTopItems('tracks', 'short_term', 49, 0),
+      fetchTopItems('tracks', 'short_term', 50, 49),
+      fetchTopItems('tracks', 'medium_term', 49, 0),
+      fetchTopItems('tracks', 'medium_term', 50, 49),
+      fetchTopItems('tracks', 'long_term', 49, 0),
+      fetchTopItems('tracks', 'long_term', 50, 49),
+      fetchTopItems('artists', 'short_term', 50, 0),
+      fetchTopItems('artists', 'short_term', 50, 49),
+      fetchTopItems('artists', 'medium_term', 49, 0),
+      fetchTopItems('artists', 'medium_term', 50, 49),
+      fetchTopItems('artists', 'long_term', 49, 0),
+      fetchTopItems('artists', 'long_term', 50, 49)
+    ]);
+
+    console.log(tracks1short.data.items[0].album.images);
+    console.log(artists1short.data.items[0]);
 
     res.send(
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
       '<link rel="stylesheet" type="text/css" href="css/home.css" />' +
       "<main>" +
       "<h1>Spotify Statistics</h1>" +
-      "<div id='statsContainer'>" +
-        "<div id='tracksContainer'>" +
-        "<h2>Top Tracks</h2>" +
-          "<div id='trackLists'>" +
-          "<div class='olContainer'>" +
-            "<h3>4 Weeks</h3>" +
+      "<div class='tabContainer'>" +
+        "<div class='topTabs'>" +
+          "<button class='tabButton active' onclick='showTab(\"tracks\")'>Tracks</button>" +
+          "<button class='tabButton' onclick='showTab(\"artists\")'>Artists</button>" +
+        "</div>" +
+        "<div class='subTabs'>" +
+          "<button class='tabButton active' onclick='showSubTab(\"4weeks\")'>4 Weeks</button>" +
+          "<button class='tabButton' onclick='showSubTab(\"6months\")'>6 Months</button>" +
+          "<button class='tabButton' onclick='showSubTab(\"lifetime\")'>Lifetime</button>" +
+        "</div>" +
+        "<div id='tracks' class='tabContent'>" +
+          "<div id='4weeks-tracks' class='subTabContent'>" +
+            "<h2>Top Tracks - 4 Weeks</h2>" +
             "<ol>" +
-            tracks1short.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
-            tracks2short.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
-           "</ol>" +
-          "</div>" +
-          "<div class='olContainer'>" +
-            "<h3>6 Months</h3>" +
-            "<ol>" +
-            tracks1medium.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
-            tracks2medium.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
+            tracks1short.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
+            tracks2short.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
             "</ol>" +
           "</div>" +
-          "<div class='olContainer'>" +
-            "<h3>Lifetime</h3>" +
+          "<div id='6months-tracks' class='subTabContent hidden'>" +
+            "<h2>Top Tracks - 6 Months</h2>" +
             "<ol>" +
-            tracks1long.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
-            tracks2long.data.items.map((item) => "<li><img src='"+ item.album.images[2].url + "'><br>" + item.name + "</li>").join("") +
+            tracks1medium.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
+            tracks2medium.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
             "</ol>" +
           "</div>" +
+          "<div id='lifetime-tracks' class='subTabContent hidden'>" +
+            "<h2>Top Tracks - Lifetime</h2>" +
+            "<ol>" +
+            tracks1long.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
+            tracks2long.data.items.map(item => `<li><img src='${item.album.images[1].url}'><br>${item.name}</li>`).join("") +
+            "</ol>" +
           "</div>" +
         "</div>" +
-        "<div id='artistsContainer'>" +
-          "<h2>Top Artists</h2>" +
-          "<div id='artistLists'>" +
-          "<div class='olContainer'>" +
-            "<h3>4 Weeks</h3>" +
+        "<div id='artists' class='tabContent hidden'>" +
+          "<div id='4weeks-artists' class='subTabContent'>" +
+            "<h2>Top Artists - 4 Weeks</h2>" +
             "<ol>" +
-            artists1short.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
-            artists2short.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
+            artists1short.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
+            artists2short.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
             "</ol>" +
           "</div>" +
-          "<div class='olContainer'>" +
-            "<h3>6 Months</h3>" +
+          "<div id='6months-artists' class='subTabContent hidden'>" +
+            "<h2>Top Artists - 6 Months</h2>" +
             "<ol>" +
-            artists1medium.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
-            artists2medium.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
+            artists1medium.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
+            artists2medium.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
             "</ol>" +
           "</div>" +
-          "<div class='olContainer'>" +
-            "<h3>Lifetime</h3>" +
+          "<div id='lifetime-artists' class='subTabContent hidden'>" +
+            "<h2>Top Artists - Lifetime</h2>" +
             "<ol>" +
-            artists1long.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
-            artists2long.data.items.map((item) => "<li><img src='"+ item.images[2].url + "' width='64'><br>" + item.name + "</li>").join("") +
+            artists1long.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
+            artists2long.data.items.map(item => `<li><img src='${item.images[1].url}' width='64'><br>${item.name}</li>`).join("") +
             "</ol>" +
-          "</div>" +
           "</div>" +
         "</div>" +
       "</div>" +
+      "<script>" +
+        "function showTab(tabId) {" +
+          "document.querySelectorAll('.tabContent').forEach(el => el.classList.add('hidden'));" +
+          "document.getElementById(tabId).classList.remove('hidden');" +
+          "document.querySelectorAll('.topTabs .tabButton').forEach(el => el.classList.remove('active'));" +
+          "event.target.classList.add('active');" +
+          "showSubTab('4weeks');" + 
+        "}" +
+        "function showSubTab(subTabId) {" +
+          "var tabId;" +
+          "document.querySelectorAll('.topTabs .tabButton').forEach(el => {" +
+            "if (el.classList.contains('active')) {" +
+              "tabId = el.getAttribute('onclick').match(/showTab\\(\"(.*?)\"\\)/)[1];" +
+            "}" +
+          "});" +
+          "document.querySelectorAll(`#${tabId} .subTabContent`).forEach(el => el.classList.add('hidden'));" +
+          "document.getElementById(`${subTabId}-${tabId}`).classList.remove('hidden');" +
+          "document.querySelectorAll('.subTabs .tabButton').forEach(el => el.classList.remove('active'));" +
+          "event.target.classList.add('active');" +
+        "}" +
+      "</script>" +
       "</main>"
-    );  
+    );
 });
